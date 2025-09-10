@@ -1,0 +1,32 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+
+# ---- Virtual Envs ----
+.env
+.venv/
+venv/
+ENV/
+
+# ---- Environment Files ----
+*.env
+
+# ---- Databases ----
+*.db
+*.sqlite3
+
+# ---- Logs ----
+*.log
+
+# ---- FAISS Index Files ----
+*.faiss
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+
+# ---- OS Files ----
+.DS_Store
+Thumbs.db

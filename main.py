@@ -12,8 +12,7 @@ import google.generativeai as genai
 # -----------------------------
 # Load environment variables
 # -----------------------------
-from dotenv import load_dotenv
-load_dotenv()
+load_dotenv()  # Works locally; on Render, env vars are injected automatically
 
 # Get the directory of the current script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,10 +21,15 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 FAISS_INDEX_FILE = os.path.join(script_dir, "argo_hierarchical_index.faiss")
 METADATA_FILE = os.path.join(script_dir, "argo_metadata.csv")
 SQLITE_FILE = os.path.join(script_dir, "argo_meta.db")
-GEMINI_API_KEY = os.getenv("AIzaSyDIQFHCUM3Ywv6_Oeyp4zm_X7XbrCO58VE")
+
+# ✅ Load API key from env
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise ValueError("❌ GEMINI_API_KEY not set. Please configure it in your environment.")
+
+# Optional configs
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
-
 
 # -----------------------------
 # Setup logging
@@ -39,15 +43,19 @@ logging.basicConfig(
 # -----------------------------
 # Load FAISS + Metadata
 # -----------------------------
-faiss_index = faiss.read_index(FAISS_INDEX_FILE)
-metadata_df = pd.read_csv(METADATA_FILE)
-metadata = {idx: row.to_dict() for idx, row in metadata_df.iterrows()}
+try:
+    faiss_index = faiss.read_index(FAISS_INDEX_FILE)
+    metadata_df = pd.read_csv(METADATA_FILE)
+    metadata = {idx: row.to_dict() for idx, row in metadata_df.iterrows()}
+except Exception as e:
+    logging.error(f"Error loading FAISS/metadata: {e}")
+    raise RuntimeError("Failed to load FAISS index or metadata")
 
 # -----------------------------
 # Utility Functions
 # -----------------------------
 def create_query_vector(query_text):
-    # TODO: replace with real embedding model
+    # TODO: Replace with real embedding model
     return np.random.rand(1, faiss_index.d).astype("float32")
 
 def search_faiss(query_vector, top_k=5):
@@ -120,10 +128,3 @@ async def ask_question(req: QueryRequest):
     except Exception as e:
         logging.error(f"Error while processing query '{req.question}': {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
-
-
-
-
-
-
-
