@@ -1,32 +1,28 @@
-# ---- Python ----
+# Ignore Python cache and virtual env
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pytest_cache/
-
-# ---- Virtual Envs ----
-.env
-.venv/
-venv/
-ENV/
-
-# ---- Environment Files ----
-*.env
-
-# ---- Databases ----
-*.db
 *.sqlite3
-
-# ---- Logs ----
-*.log
-
-# ---- FAISS Index Files ----
+*.db
 *.faiss
 
-# ---- Jupyter ----
+# Ignore environment variables
+.env
+
+# Ignore virtual environment folders
+.venv/
+env/
+venv/
+
+# Ignore Jupyter notebook checkpoints
 .ipynb_checkpoints/
 
-# ---- OS Files ----
+# Ignore system files
 .DS_Store
 Thumbs.db
+
+# Ignore CSV/Excel data files
+*.csv
+*.xlsx
+*.xls
